@@ -1,25 +1,25 @@
 import type { Metadata } from 'next';
+import { Arimo } from 'next/font/google';
 import './globals.css';
-import localFont from 'next/font/local';
 
-const customFont = localFont({
-	src: [
-		{ path: 'fonts/circularstd-regular.ttf', weight: '400' },
-		{ path: 'fonts/shellypalmer-circular-std-medium.ttf', weight: '500' },
-	],
+const arimo = Arimo({
+	subsets: ['latin'],
+	weight: ['400', '500', '600', '700'],
+	variable: '--font-arimo',
+	display: 'swap',
 });
 
 export const metadata: Metadata = {
 	title: 'Demola Malomo',
 	description:
-		"I'm all about the perfect blend of Product, Design, and Engineering. With my love for innovation and an eye for detail, I've made quite a journey crafting user-focused solutions and crafting amazing digital experiences",
-	keywords: 'Demola Malomo, Malomo, Product, Design, & Engineering',
+		"Software engineer building developer platforms, cloud infrastructure, and the systems that help engineering teams move faster.",
+	keywords: 'Demola Malomo, Software Engineer, Rust, Kubernetes, Platforms, DX',
 	openGraph: {
-		title: 'Demola Malomo | Product, Design, & Engineering',
+		title: 'Demola Malomo — Software Engineer · Platforms & DX',
 		type: 'website',
 		siteName: 'Demola Malomo',
 		description:
-			"I'm all about the perfect blend of Product, Design, and Engineering. With my love for innovation and an eye for detail, I've made quite a journey crafting user-focused solutions and crafting amazing digital experiences",
+			"Software engineer building developer platforms, cloud infrastructure, and the systems that help engineering teams move faster.",
 		images: [
 			{
 				url: 'https://res.cloudinary.com/dtgbzmpca/image/upload/v1697725985/DemolaMalomz.png',
@@ -35,7 +35,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang='en'>
-			<body className={customFont.className}>{children}</body>
+			<body className={`${arimo.variable} sw`}>{children}</body>
 		</html>
 	);
 }

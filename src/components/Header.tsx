@@ -2,28 +2,34 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
+const NAV = [
+	{ label: 'About', href: '/' },
+	{ label: 'Work', href: '/work' },
+	{ label: 'Projects', href: '/projects' },
+	{ label: 'Ask AI', href: '/ai' },
+];
+
 export const Header = () => {
 	const pathname = usePathname();
 	return (
-		<header className='w-full flex justify-center mt-6'>
-			<nav className='w-full lg:w-[690px] flex justify-between'>
-				<Link
-					href='/'
-					className={`inline-block font-normal text-sm ${
-						pathname === '/' ? 'text-black' : 'text-[#797B8E]'
-					}`}
-				>
-					Demola Malomo
-				</Link>
-				<Link
-					href='/work'
-					className={`inline-block font-normal text-sm ${
-						pathname === '/work' ? 'text-black' : 'text-[#797B8E]'
-					}`}
-				>
-					Work
-				</Link>
-			</nav>
+		<header className='sw-mast'>
+			<Link className='sw-name' href='/'>
+				Demola Malomo
+			</Link>
+			<div className='sw-nav'>
+				<span className='sw-nav-tag'>Software Engineer · Platforms &amp; DX</span>
+				<nav className='sw-nav-links'>
+					{NAV.map(({ label, href }) => (
+						<Link
+							key={href}
+							href={href}
+							className={`sw-nav-link${pathname === href ? ' on' : ''}`}
+						>
+							{label}
+						</Link>
+					))}
+				</nav>
+			</div>
 		</header>
 	);
 };

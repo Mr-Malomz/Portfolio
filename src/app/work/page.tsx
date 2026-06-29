@@ -1,19 +1,22 @@
 import { Header } from '@/components/Header';
-import Image from 'next/image';
-import { gql, useQuery, useSuspenseQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { getClient } from '@/lib/apolloClient';
 import Link from 'next/link';
 
-interface CoverImage {
-	url: string;
-}
+const EMAIL = 'hello@demolamalomo.xyz';
+
+const SOCIAL: [string, string][] = [
+	['Behance', 'https://www.behance.net/ademolamalomo'],
+	['LinkedIn', 'https://www.linkedin.com/in/malomoademola/'],
+	['GitHub', 'https://github.com/Mr-Malomz'],
+	['Blog', 'https://dev.to/malomz'],
+];
 
 interface IWork {
 	id: string;
 	name: string;
 	description: string;
 	timeline: string[];
-	coverImage: CoverImage;
 }
 
 const SELECTED_WORK = gql`
@@ -25,72 +28,90 @@ const SELECTED_WORK = gql`
 					name
 					description
 					timeline
-					coverImage {
-						url
-					}
 				}
 			}
 		}
 	}
 `;
 
-export default async function Work() {
-	const { loading, error, data } = await getClient().query({
-		query: SELECTED_WORK,
-	});
+function formatTimeline(timeline: string[]): string {
+	if (!timeline?.length) return '—';
+	if (timeline.length === 1) return `${timeline[0]} —`;
+	return `${timeline[0]} — ${timeline[1]}`;
+}
 
-	if (loading) return <p className='text-sm text-center'>Loading...</p>;
-	if (error)
+export default async function Work() {
+	const { error, data } = await getClient().query({ query: SELECTED_WORK });
+
+	if (error) {
 		return (
-			<p className='text-sm text-center text-red-700'>
-				Oopps!, Looks like something went wrong{' '}
-				<Link
-					href='mailto:demola.malomo@gmail.com,malomo.alaba@yahoo.com'
-					className='underline hover:text-[#191A23] underline-offset-4'
-				>
-					Let's inform Demola about this 🤒
-				</Link>
-			</p>
+			<div className='sw-page--work'>
+				<Header />
+				<p style={{ marginTop: '80px', color: 'var(--dim)', fontSize: '16px' }}>
+					Something went wrong.{' '}
+					<Link href={`mailto:${EMAIL}`} style={{ color: 'var(--accent)' }}>
+						Let Demola know →
+					</Link>
+				</p>
+			</div>
 		);
+	}
+
+	const works: IWork[] = data?.works?.[0]?.workList ?? [];
 
 	return (
-		<main className='p-4 min-h-screen bg-gradient bg-[#F4F4F4]'>
+		<div className='sw-page--work'>
 			<Header />
-			<div className='w-full flex justify-center items-center mt-24 lg:mt-[120px]'>
-				<section className='w-full lg:w-[690px]'>
-					<h1 className='font-normal text-2xl text-black mb-[42px]'>
-						Work
-					</h1>
-					{data?.works[0].workList.map((work: IWork) => (
-						<div className='my-[42px]' key={work.id}>
-							<Image
-								src={work.coverImage.url}
-								height={393}
-								width={689}
-								alt=''
-								className='mb-6'
-							/>
-							<div className='flex items-center mb-3'>
-								<p className='text-black mr-[32px]'>
-									{work.name}
-								</p>
-								<p className='text-[#797B8E] text-sm mr-[8px]'>
-									{work.timeline[0]}
-								</p>
-								<p className='text-[#797B8E] text-sm mr-[8px]'>
-									To
-								</p>
-								<p className='text-[#797B8E] text-sm mr-[8px]'>
-									{work.timeline[1]}
-								</p>
+
+			<section className='sw-work-hero'>
+				<div>
+					<div className='sw-eyebrow'>
+						{works.length > 0 ? `${works.length} entries` : 'Experience'}
+					</div>
+					<h1>Work</h1>
+				</div>
+				<p>
+					A chronological account of what I&apos;ve designed, built and shipped
+					— across product, design systems and the front-end.
+				</p>
+			</section>
+
+			<section className='sw-timeline'>
+				{works.map((work) => (
+					<div className='sw-tl-row' key={work.id}>
+						<div className='sw-tl-year'>{formatTimeline(work.timeline)}</div>
+						<div className='sw-tl-body'>
+							<div className='sw-tl-head'>
+								<div className='sw-tl-name'>{work.name}</div>
+								{/* role placeholder — add `role` field in Hygraph to replace */}
+								<div className='sw-tl-role'>—</div>
 							</div>
-							<p className='mb-5 text-[#3F404D] leading-[23.09px] text-sm'>
-								{work.description}
-							</p>
+							<p className='sw-tl-desc'>{work.description}</p>
+							{/* tags placeholder — add `tags` field in Hygraph to replace */}
 						</div>
+					</div>
+				))}
+			</section>
+
+			<footer
+				className='sw-contact'
+				style={{ marginTop: '72px', paddingTop: '40px' }}
+			>
+				<div className='sw-contact-l'>
+					<div className='sw-eyebrow'>Contact</div>
+					<Link className='sw-email' href={`mailto:${EMAIL}`}>
+						{EMAIL}
+					</Link>
+				</div>
+				<nav className='sw-social'>
+					{SOCIAL.map(([label, href]) => (
+						<a key={label} href={href} target='_blank' rel='noreferrer'>
+							{label}
+							<i> ↗</i>
+						</a>
 					))}
-				</section>
-			</div>
-		</main>
+				</nav>
+			</footer>
+		</div>
 	);
 }
