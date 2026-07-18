@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 	description:
 		"Software engineer building developer platforms, cloud infrastructure, and the systems that help engineering teams move faster.",
 	keywords: 'Demola Malomo, Software Engineer, Rust, Kubernetes, Platforms, DX',
+	icons: { icon: '/favicon.png' },
 	openGraph: {
 		title: 'Demola Malomo — Software Engineer · Platforms & DX',
 		type: 'website',

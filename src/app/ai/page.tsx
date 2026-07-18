@@ -132,23 +132,25 @@ export default function AiPage() {
 					className='sw-ai-form'
 					onSubmit={(e) => { e.preventDefault(); send(input); }}
 				>
-					<textarea
-						ref={textareaRef}
-						className='sw-ai-input'
-						rows={1}
-						placeholder='Ask me anything…'
-						value={input}
-						onChange={handleInput}
-						onKeyDown={handleKeyDown}
-						disabled={loading}
-					/>
-					<button
-						type='submit'
-						className='sw-ai-send'
-						disabled={!input.trim() || loading}
-					>
-						Send
-					</button>
+					<div className='sw-ai-form-box'>
+						<textarea
+							ref={textareaRef}
+							className='sw-ai-input'
+							rows={1}
+							placeholder='Ask me anything…'
+							value={input}
+							onChange={handleInput}
+							onKeyDown={handleKeyDown}
+							disabled={loading}
+						/>
+						<button
+							type='submit'
+							className='sw-ai-send'
+							disabled={!input.trim() || loading}
+						>
+							Send
+						</button>
+					</div>
 				</form>
 			</div>
 		</div>

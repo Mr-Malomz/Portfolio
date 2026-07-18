@@ -293,8 +293,11 @@ html, body { background: var(--bg); }
   letter-spacing: -.03em;
   line-height: 1;
   transition: color .25s;
+  color: var(--ink);
+  text-decoration: none;
 }
 .sw-tl-row:hover .sw-tl-name { color: var(--accent); }
+a.sw-tl-name:hover { color: var(--accent); }
 .sw-tl-role {
   font-size: 11px;
   font-weight: 700;
@@ -454,6 +457,8 @@ html, body { background: var(--bg); }
 }
 .sw-ai-inner {
   max-width: 720px;
+  width: 100%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -542,11 +547,20 @@ html, body { background: var(--bg); }
   position: sticky;
   bottom: 0;
   background: var(--bg);
-  padding: 14px 0 22px;
-  border-top: 1px solid var(--ink);
+  padding: 20px 0 32px;
+}
+.sw-ai-form-box {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   align-items: flex-end;
+  border: 1.5px solid var(--rule);
+  border-radius: 12px;
+  padding: 12px 16px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.sw-ai-form-box:focus-within {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 6%, transparent);
 }
 .sw-ai-input {
   flex: 1;
@@ -558,7 +572,7 @@ html, body { background: var(--bg); }
   outline: none;
   resize: none;
   line-height: 1.5;
-  padding: 11px 2px;
+  padding: 4px 0;
   max-height: 140px;
 }
 .sw-ai-input::placeholder { color: var(--dim); }
@@ -629,7 +643,9 @@ html, body { background: var(--bg); }
   .sw-page--projects { padding: 34px 24px 48px; }
   .sw-page--ai       { padding: 34px 28px 0; }
 
-  .sw-work-hero { padding: 48px 0 22px; }
+  /* Hero: stack title + description vertically */
+  .sw-work-hero { padding: 48px 0 22px; grid-template-columns: 1fr; gap: 20px; }
+  .sw-work-hero p { max-width: 100%; }
 
   .sw-tl-row { grid-template-columns: 64px 1fr; gap: 18px; }
   .sw-tl-body { padding-left: 24px; }
@@ -645,4 +661,56 @@ html, body { background: var(--bg); }
   .sw-ai-msg { grid-template-columns: 1fr; gap: 8px; }
 
   .sw-contact { flex-direction: column; align-items: flex-start; gap: 24px; }
+  .sw-social { flex-wrap: wrap; gap: 16px; }
+}
+
+/* Small phones — nav overflow, timeline collapse, tighter padding */
+@media (max-width: 600px) {
+  /* Nav: stack name above links so 4 items don't overflow */
+  .sw-mast {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 20px;
+  }
+  .sw-nav { gap: 16px; }
+  .sw-nav-links { gap: 16px; flex-wrap: wrap; }
+
+  /* Page padding */
+  .sw-page--editorial { padding: 24px 20px 40px; }
+  .sw-page--work      { padding: 24px 20px 40px; }
+  .sw-page--projects  { padding: 24px 20px 40px; }
+  .sw-page--ai        { padding: 24px 20px 0; }
+
+  /* Home CTA: hide right meta, too cramped */
+  .sw-worklink-meta { display: none; }
+
+  /* Timeline: collapse year column into a full-width label row */
+  .sw-tl-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .sw-tl-year {
+    position: static;
+    padding: 24px 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    border-top: 1px solid var(--line);
+    white-space: normal;
+  }
+  .sw-tl-row:first-child .sw-tl-year {
+    border-top: none;
+    padding-top: 16px;
+  }
+  .sw-tl-body {
+    padding: 6px 0 28px 18px;
+  }
+  .sw-tl-row:last-child .sw-tl-body { padding-bottom: 6px; }
+  .sw-tl-body::before { top: 10px; }
+  .sw-tl-name { font-size: 22px; }
+  .sw-tl-role { white-space: normal; }
+  .sw-tl-desc { font-size: 15px; max-width: 100%; }
 }

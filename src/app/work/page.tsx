@@ -3,7 +3,7 @@ import { gql } from '@apollo/client';
 import { getClient } from '@/lib/apolloClient';
 import Link from 'next/link';
 
-const EMAIL = 'hello@demolamalomo.xyz';
+const EMAIL = 'demola.malomo@gmail.com';
 
 const SOCIAL: [string, string][] = [
 	['Behance', 'https://www.behance.net/ademolamalomo'],
@@ -17,6 +17,8 @@ interface IWork {
 	name: string;
 	description: string;
 	timeline: string[];
+	role?: string;
+	link?: string;
 }
 
 const SELECTED_WORK = gql`
@@ -28,6 +30,8 @@ const SELECTED_WORK = gql`
 					name
 					description
 					timeline
+					role
+					link
 				}
 			}
 		}
@@ -47,9 +51,18 @@ export default async function Work() {
 		return (
 			<div className='sw-page--work'>
 				<Header />
-				<p style={{ marginTop: '80px', color: 'var(--dim)', fontSize: '16px' }}>
+				<p
+					style={{
+						marginTop: '80px',
+						color: 'var(--dim)',
+						fontSize: '16px',
+					}}
+				>
 					Something went wrong.{' '}
-					<Link href={`mailto:${EMAIL}`} style={{ color: 'var(--accent)' }}>
+					<Link
+						href='mailto:demlabz@gmail.com'
+						style={{ color: 'var(--accent)' }}
+					>
 						Let Demola know →
 					</Link>
 				</p>
@@ -66,25 +79,43 @@ export default async function Work() {
 			<section className='sw-work-hero'>
 				<div>
 					<div className='sw-eyebrow'>
-						{works.length > 0 ? `${works.length} entries` : 'Experience'}
+						{works.length > 0
+							? `${works.length} entries`
+							: 'Experience'}
 					</div>
 					<h1>Work</h1>
 				</div>
 				<p>
-					A chronological account of what I&apos;ve designed, built and shipped
-					— across product, design systems and the front-end.
+					A chronological account of my experience across multiple
+					organizations, spanning platform engineering, developer
+					experience, developer advocacy, and cloud infrastructure.
 				</p>
 			</section>
 
 			<section className='sw-timeline'>
 				{works.map((work) => (
 					<div className='sw-tl-row' key={work.id}>
-						<div className='sw-tl-year'>{formatTimeline(work.timeline)}</div>
+						<div className='sw-tl-year'>
+							{formatTimeline(work.timeline)}
+						</div>
 						<div className='sw-tl-body'>
 							<div className='sw-tl-head'>
-								<div className='sw-tl-name'>{work.name}</div>
+								{work.link ? (
+									<Link
+										className='sw-tl-name'
+										href={work.link}
+										target='_blank'
+										rel='noreferrer'
+									>
+										{work.name}
+									</Link>
+								) : (
+									<div className='sw-tl-name'>
+										{work.name}
+									</div>
+								)}
 								{/* role placeholder — add `role` field in Hygraph to replace */}
-								<div className='sw-tl-role'>—</div>
+								<div className='sw-tl-role'>{work.role}</div>
 							</div>
 							<p className='sw-tl-desc'>{work.description}</p>
 							{/* tags placeholder — add `tags` field in Hygraph to replace */}
@@ -105,7 +136,12 @@ export default async function Work() {
 				</div>
 				<nav className='sw-social'>
 					{SOCIAL.map(([label, href]) => (
-						<a key={label} href={href} target='_blank' rel='noreferrer'>
+						<a
+							key={label}
+							href={href}
+							target='_blank'
+							rel='noreferrer'
+						>
 							{label}
 							<i> ↗</i>
 						</a>

@@ -1,7 +1,9 @@
 import { Header } from '@/components/Header';
+import { gql } from '@apollo/client';
+import { getClient } from '@/lib/apolloClient';
 import Link from 'next/link';
 
-const EMAIL = 'hello@demolamalomo.xyz';
+const EMAIL = 'demola.malomo@gmail.com';
 
 const SOCIAL: [string, string][] = [
 	['Behance', 'https://www.behance.net/ademolamalomo'],
@@ -10,54 +12,55 @@ const SOCIAL: [string, string][] = [
 	['Blog', 'https://dev.to/malomz'],
 ];
 
-const PROJECTS = [
-	{
-		kind: 'Built',
-		name: 'DockAdmin',
-		year: '2024',
-		desc: 'A Docker-native database administration platform written in Rust, shipped as a lightweight container image. Manage PostgreSQL, MySQL, and SQLite from a single place.',
-		tags: ['Rust', 'Docker', 'Databases'],
-		links: [
-			['GitHub', '#'],
-			['Write-up', '#'],
-		] as [string, string][],
-	},
-	{
-		kind: 'Built',
-		name: 'Bimi',
-		year: '2024',
-		desc: 'A financial search engine built on more than 20 million Nigerian fiscal records — making public spending fast to search and explore.',
-		tags: ['Rust', 'Search', 'Fintech'],
-		links: [
-			['Live', '#'],
-			['GitHub', '#'],
-		] as [string, string][],
-	},
-	{
-		kind: 'Contributor',
-		name: 'SautiDB-Naija',
-		year: '2022',
-		desc: 'An open-source, Nigerian-accented speech corpus for training and evaluating speech models — contributing data and tooling to the project.',
-		tags: ['Open Source', 'Dataset', 'Speech'],
-		links: [
-			['GitHub', '#'],
-			['Paper', '#'],
-		] as [string, string][],
-	},
-	{
-		kind: 'Founder',
-		name: 'FullstackWriter.dev',
-		year: '2023',
-		desc: 'A publishing platform that helps developers build a body of technical writing — write, share, and grow a portfolio that compounds over time.',
-		tags: ['Product', 'Platform', 'DX'],
-		links: [
-			['Live', '#'],
-			['Articles', '#'],
-		] as [string, string][],
-	},
-];
+interface ProjectLink {
+	label: string;
+	url: string;
+}
 
-export default function Projects() {
+interface IProject {
+	id: string;
+	name: string;
+	kind: string;
+	description: string;
+	tags: string[];
+	links: ProjectLink[];
+}
+
+const PROJECTS_QUERY = gql`
+	query {
+		projects {
+			id
+			name
+			kind
+			description
+			tags
+			links {
+				label
+				url
+			}
+		}
+	}
+`;
+
+export default async function Projects() {
+	const { error, data } = await getClient().query({ query: PROJECTS_QUERY });
+
+	if (error) {
+		return (
+			<div className='sw-page--projects'>
+				<Header />
+				<p style={{ marginTop: '80px', color: 'var(--dim)', fontSize: '16px' }}>
+					Something went wrong.{' '}
+					<Link href='mailto:demlabz@gmail.com' style={{ color: 'var(--accent)' }}>
+						Let Demola know →
+					</Link>
+				</p>
+			</div>
+		);
+	}
+
+	const projects: IProject[] = data?.projects ?? [];
+
 	return (
 		<div className='sw-page--projects'>
 			<Header />
@@ -65,55 +68,66 @@ export default function Projects() {
 			<section className='sw-work-hero'>
 				<div>
 					<div className='sw-eyebrow'>
-						{PROJECTS.length} projects · built &amp; collaborated
+						{projects.length > 0
+							? `${projects.length} projects · built & collaborated`
+							: 'Projects'}
 					</div>
 					<h1>Projects</h1>
 				</div>
 				<p>
-					Things I&apos;ve built or helped build — products, infrastructure, and
-					open source. Each links out to the code, the live work, or a write-up.
+					Selected projects spanning developer platforms, cloud
+					infrastructure, open source, and developer experience.
+					Explore the code, live projects, and technical write-ups
+					behind each one.
 				</p>
 			</section>
 
 			<section className='sw-proj-grid'>
-				{PROJECTS.map((project, i) => (
-					<article className='sw-proj' key={project.name}>
+				{projects.map((project, i) => (
+					<article className='sw-proj' key={project.id}>
 						<div className='sw-proj-top'>
 							<span className='sw-proj-num'>
 								{String(i + 1).padStart(2, '0')}
 							</span>
-							<span className='sw-proj-year'>{project.year}</span>
 						</div>
 						<div className='sw-proj-kind'>{project.kind}</div>
 						<h2 className='sw-proj-name'>{project.name}</h2>
-						<p className='sw-proj-desc'>{project.desc}</p>
-						<div className='sw-tl-tags'>
-							{project.tags.map((tag) => (
-								<span className='sw-tl-tag' key={tag}>
-									{tag}
-								</span>
-							))}
-						</div>
-						<div className='sw-proj-links'>
-							{project.links.map(([label, href]) =>
-								href !== '#' ? (
-									<a
-										className='sw-proj-link'
-										href={href}
-										target='_blank'
-										rel='noreferrer'
-										key={label}
-									>
-										{label}
-										<i>↗</i>
-									</a>
-								) : (
-									<span className='sw-proj-link' key={label} style={{ color: 'var(--dim)' }}>
-										{label}
+						<p className='sw-proj-desc'>{project.description}</p>
+						{project.tags?.length > 0 && (
+							<div className='sw-tl-tags'>
+								{project.tags.map((tag) => (
+									<span className='sw-tl-tag' key={tag}>
+										{tag}
 									</span>
-								)
-							)}
-						</div>
+								))}
+							</div>
+						)}
+						{project.links?.length > 0 && (
+							<div className='sw-proj-links'>
+								{project.links.map((link) =>
+									link.url ? (
+										<a
+											className='sw-proj-link'
+											href={link.url}
+											target='_blank'
+											rel='noreferrer'
+											key={link.label}
+										>
+											{link.label}
+											<i>↗</i>
+										</a>
+									) : (
+										<span
+											className='sw-proj-link'
+											key={link.label}
+											style={{ color: 'var(--dim)' }}
+										>
+											{link.label}
+										</span>
+									),
+								)}
+							</div>
+						)}
 					</article>
 				))}
 			</section>
@@ -124,13 +138,21 @@ export default function Projects() {
 			>
 				<div className='sw-contact-l'>
 					<div className='sw-eyebrow'>Contact</div>
-					<Link className='sw-email' href={`mailto:${EMAIL}`}>
+					<Link
+						className='sw-email'
+						href={`mailto:${EMAIL}`}
+					>
 						{EMAIL}
 					</Link>
 				</div>
 				<nav className='sw-social'>
 					{SOCIAL.map(([label, href]) => (
-						<a key={label} href={href} target='_blank' rel='noreferrer'>
+						<a
+							key={label}
+							href={href}
+							target='_blank'
+							rel='noreferrer'
+						>
 							{label}
 							<i> ↗</i>
 						</a>

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 
-const EMAIL = 'hello@demolamalomo.xyz';
+const EMAIL = 'demola.malomo@gmail.com';
 
 const SOCIAL: [string, string][] = [
 	['Behance', 'https://www.behance.net/ademolamalomo'],
@@ -11,11 +11,11 @@ const SOCIAL: [string, string][] = [
 ];
 
 const BIO = [
-	"I'm a software engineer based in Lagos, Nigeria. I build developer platforms, cloud infrastructure, and the systems that help engineering teams move faster.",
-	"My work spans Rust, Kubernetes, and AWS. I design and operate production systems — from containerized backends and gRPC services to Kubernetes clusters and the networking, ingress, and deployment challenges that come with running them at scale.",
-	"I've built products like DockAdmin, a Docker-native database administration platform written in Rust and shipped as a lightweight container image supporting PostgreSQL, MySQL, and SQLite — and Bimi, a financial search engine built on more than 20 million Nigerian fiscal records.",
-	"What sets me apart is the ability to bridge platform engineering and developer experience. I don't just build the infrastructure; I write the documentation, onboarding flows, SDK experiences, and technical content that help other developers become productive on it quickly.",
-	"I'm a contributor to the open-source SautiDB-Naija speech corpus, an Appwrite Hero, and the founder of FullstackWriter.dev, where I write about Rust, Kubernetes, cloud infrastructure, and developer tooling.",
+	"I'm a software engineer building developer platforms, cloud infrastructure, and systems that help engineering teams move faster.",
+	'My work spans Rust, Kubernetes, AWS, and modern cloud-native technologies. I design and operate production systems, from containerized backends and gRPC services to Kubernetes clusters and the networking, deployment, and infrastructure challenges involved in running them reliably at scale.',
+	"I've built products like DockAdmin, a Docker-native database administration platform written in Rust and shipped as a lightweight container image supporting PostgreSQL, MySQL, and SQLite, and Bimi, a financial search engine built on more than 20 million Nigerian financial records.",
+	'Beyond building infrastructure, I focus on improving the developer experience around it. I work across platform engineering, documentation, SDKs, onboarding flows, and technical content to help developers understand, adopt, and build effectively with the systems I create.',
+	"I'm a contributor to the open-source SautiDB-Naija speech corpus, an Appwrite Hero, and the founder of FullstackWriter.dev, where I write about Rust, Kubernetes, cloud infrastructure, AI engineering, and developer tooling.",
 ];
 
 export default function Home() {
